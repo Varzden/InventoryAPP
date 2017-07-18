@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:orientation="horizontal"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/product_thumbnail"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:layout_margin="5dp"/>
+
+    <LinearLayout
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="15dp">
+
+        <TextView
+            android:id="@+id/inventory_item_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="#2B3D4D"
+            tools:text="Product name" />
+
+        <TextView
+            android:id="@+id/inventory_item_price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#AEB6BD"
+            android:textSize="17sp"
+            tools:text="price" />
+
+        <TextView
+            android:id="@+id/inventory_item_current_quantity_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Inventory: " />
+
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/sale_product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/shopp" />
+</LinearLayout>
