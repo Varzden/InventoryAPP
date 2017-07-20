@@ -3,6 +3,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="15dp"
     android:orientation="vertical">
 
@@ -68,6 +69,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/hint_product_price"
+            android:inputType="number"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/supplier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/supplier"
+            android:paddingTop="10dp"
+            android:textColor="#000"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/supplier_ET"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_supplier"
             android:inputType="number"
             android:textSize="15sp" />
 
@@ -147,6 +165,30 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/ic_delete_product" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/order_more_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_more"
+                android:textColor="#000"
+                android:layout_margin="10dp"/>
+
+            <ImageButton
+                android:id="@+id/order_more_button"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:src="@drawable/order_more"
+               />
+
 
         </LinearLayout>
     </LinearLayout>

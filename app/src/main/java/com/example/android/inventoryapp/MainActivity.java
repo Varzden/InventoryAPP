@@ -30,14 +30,15 @@ public class MainActivity extends AppCompatActivity implements
      */
     private static final int INVENTORY_LOADER = 0;
     //General Product QUERY PROJECTION
-    public final String[] PRODUCT_COLS = {
+    public final String[] PRODUCT_COLUMNS = {
             InventoryEntry._ID,
             InventoryEntry.COLUMN_NAME,
             InventoryEntry.COLUMN_QUANTITY,
             InventoryEntry.COLUMN_PRICE,
             InventoryEntry.COLUMN_DESCRIPTION,
             InventoryEntry.COLUMN_ITEMS_SOLD,
-            InventoryEntry.COLUMN_PICTURE
+            InventoryEntry.COLUMN_PICTURE,
+            InventoryEntry.COLUMN_SUPPLIER
     };
 
     /**
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements
 
         return new CursorLoader(this,
                 InventoryEntry.CONTENT_URI,
-                PRODUCT_COLS,
+                PRODUCT_COLUMNS,
                 null,
                 null,
                 null);

@@ -75,6 +75,7 @@ public class InventoryContract {
         public final static String COLUMN_DESCRIPTION = "description";
         public final static String COLUMN_ITEMS_SOLD = "sales";
         public final static String COLUMN_PICTURE = "picture";
+        public final static String COLUMN_SUPPLIER = "supplier";
 
         public static Uri buildInventoryURI(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

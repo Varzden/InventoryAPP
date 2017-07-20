@@ -61,7 +61,8 @@ public class EditorActivity extends AppCompatActivity implements
             InventoryEntry.COLUMN_PRICE,
             InventoryEntry.COLUMN_DESCRIPTION,
             InventoryEntry.COLUMN_ITEMS_SOLD,
-            InventoryEntry.COLUMN_PICTURE
+            InventoryEntry.COLUMN_PICTURE,
+            InventoryEntry.COLUMN_SUPPLIER
     };
 
     private Uri mCurrentProductUri;
@@ -72,6 +73,7 @@ public class EditorActivity extends AppCompatActivity implements
     private EditText mProductInventory;
     private EditText mProductItemSold;
     private EditText mProductPrice;
+    private EditText mProductSupplier;
 
     //ImageView
     private ImageView mProductPhoto;
@@ -79,10 +81,17 @@ public class EditorActivity extends AppCompatActivity implements
     //TextViews
     private TextView labelUpdate_Save;
     private TextView labelDelete;
+    private TextView labelOrder;
 
     //ImageButtons
     private ImageButton deleteIB;
     private ImageButton updateIB;
+    private ImageButton orderIB;
+
+    //Variables that we need for or
+    private String mEmail;
+    private String mProduct;
+    private int mOrderQuantity = 10;
 
     //Photo uri
     private String mCurrentPhotoUri = "no images";
@@ -109,31 +118,6 @@ public class EditorActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        // Examine the intent that was used to launch this activity,
-        // in order to figure out if we're creating a new product or editing an existing one.
-        Intent intent = getIntent();
-        mCurrentProductUri = intent.getData();
-
-        // If the intent DOES NOT contain a product content URI, then we know that we are
-        // creating a new product.
-        if (mCurrentProductUri == null) {
-            //User click new product
-            setTitle(getString(R.string.add_product_title));
-            labelUpdate_Save.setText(R.string.save_product_label);
-            //We can't order product for new ones
-            deleteIB.setVisibility(View.GONE);
-            labelDelete.setVisibility(View.GONE);
-
-        } else {
-            // Otherwise this is an existing product, so change app bar to say "Edit Product"
-            setTitle(getString(R.string.edit_product_title));
-            labelUpdate_Save.setText(R.string.update_product_label);
-            labelDelete.setVisibility(View.VISIBLE);
-            deleteIB.setVisibility(View.VISIBLE);
-            // Initialize a loader to read the product data from the database
-            // and display the current values in the editor
-            getLoaderManager().initLoader(CURRENT_INVENTORY_LOADER, null, this);
-        }
 
         //Connect elements to required view
 
@@ -145,12 +129,15 @@ public class EditorActivity extends AppCompatActivity implements
         mProductInventory = (EditText) findViewById(R.id.item_quantity_ET);
         mProductItemSold = (EditText) findViewById(R.id.current_sales_ET);
         mProductPrice = (EditText) findViewById(R.id.item_price_ET);
+        mProductSupplier = (EditText) findViewById(R.id.supplier_ET);
 
         deleteIB = (ImageButton) findViewById(R.id.delete_product_button);
         updateIB = (ImageButton) findViewById(R.id.save_product_button);
+        orderIB = (ImageButton) findViewById(R.id.order_more_button);
 
         labelUpdate_Save = (TextView) findViewById(R.id.update_save_label);
         labelDelete = (TextView) findViewById(R.id.delete_label);
+        labelOrder = (TextView) findViewById(R.id.order_more_label);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -161,6 +148,7 @@ public class EditorActivity extends AppCompatActivity implements
         mProductInventory.setOnTouchListener(mTouchListener);
         mProductItemSold.setOnTouchListener(mTouchListener);
         mProductPrice.setOnTouchListener(mTouchListener);
+        mProductSupplier.setOnTouchListener(mTouchListener);
 
 
         //On click listeners for photo and buttons
@@ -185,6 +173,44 @@ public class EditorActivity extends AppCompatActivity implements
             }
         });
 
+        orderIB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orderMore();
+            }
+        });
+
+
+        // Examine the intent that was used to launch this activity,
+        // in order to figure out if we're creating a new product or editing an existing one.
+        Intent intent = getIntent();
+        mCurrentProductUri = intent.getData();
+
+        // If the intent DOES NOT contain a product content URI, then we know that we are
+        // creating a new product.
+        if (mCurrentProductUri == null) {
+            //User click new product
+            setTitle(getString(R.string.add_product_title));
+            labelUpdate_Save.setText(R.string.save_product_label);
+            //We can't order product for new ones
+            deleteIB.setVisibility(View.GONE);
+            labelDelete.setVisibility(View.GONE);
+            labelOrder.setVisibility(View.GONE);
+            orderIB.setVisibility(View.GONE);
+
+
+        } else {
+            // Otherwise this is an existing product, so change app bar to say "Edit Product"
+            setTitle(getString(R.string.edit_product_title));
+            labelUpdate_Save.setText(R.string.update_product_label);
+            labelDelete.setVisibility(View.VISIBLE);
+            deleteIB.setVisibility(View.VISIBLE);
+            labelOrder.setVisibility(View.VISIBLE);
+            orderIB.setVisibility(View.VISIBLE);
+            // Initialize a loader to read the product data from the database
+            // and display the current values in the editor
+            getLoaderManager().initLoader(CURRENT_INVENTORY_LOADER, null, this);
+        }
 
     }
 
@@ -199,12 +225,13 @@ public class EditorActivity extends AppCompatActivity implements
         String inventoryString = mProductInventory.getText().toString().toString();
         String salesString = mProductItemSold.getText().toString().trim();
         String priceString = mProductPrice.getText().toString().trim();
+        String supplier = mProductSupplier.getText().toString().trim();
 
         //Check if is new or if an update
         // and check if all the fields in the editor are blank
         if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(descriptionString)
                 || TextUtils.isEmpty(inventoryString) || TextUtils.isEmpty(salesString)
-                || TextUtils.isEmpty(priceString)) {
+                || TextUtils.isEmpty(priceString) || TextUtils.isEmpty(supplier)) {
 
             // Since no fields were modified, we can return early without creating a new product.
             // No need to create ContentValues and no need to do any ContentProvider operations.
@@ -222,6 +249,7 @@ public class EditorActivity extends AppCompatActivity implements
         values.put(InventoryEntry.COLUMN_ITEMS_SOLD, salesString);
         values.put(InventoryEntry.COLUMN_PRICE, priceString);
         values.put(InventoryEntry.COLUMN_PICTURE, mCurrentPhotoUri);
+        values.put(InventoryEntry.COLUMN_SUPPLIER, supplier);
 
         // Determine if this is a new or existing product by checking if mCurrentProductUri is null or not
         if (mCurrentProductUri == null) {
@@ -364,7 +392,7 @@ public class EditorActivity extends AppCompatActivity implements
             int descriptionColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_DESCRIPTION);
             int soldColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEMS_SOLD);
             int photoColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PICTURE);
-
+            int supplierColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_SUPPLIER);
 
 
             // Extract out the value from the Cursor for the given column index
@@ -375,6 +403,7 @@ public class EditorActivity extends AppCompatActivity implements
             int itemSold = cursor.getInt(soldColumnIndex);
             String photo = cursor.getString(photoColumnIndex);
             mCurrentPhotoUri = cursor.getString(photoColumnIndex);
+            String supplier = cursor.getString(supplierColumnIndex);
 
 
             // Update the views on the screen with the values from the database
@@ -383,6 +412,10 @@ public class EditorActivity extends AppCompatActivity implements
             mProductInventory.setText(String.valueOf(quantity));
             mProductDescription.setText(description);
             mProductItemSold.setText(String.valueOf(itemSold));
+            mProductSupplier.setText(supplier);
+
+            mEmail = "orders@" + supplier + ".com";
+            mProduct = name;
 
             //Update photo using Glide
             Glide.with(this).load(mCurrentPhotoUri)
@@ -402,6 +435,7 @@ public class EditorActivity extends AppCompatActivity implements
         mProductInventory.setText("");
         mProductDescription.setText("");
         mProductItemSold.setText("");
+        mProductSupplier.setText("");
 
     }
 
@@ -552,6 +586,25 @@ public class EditorActivity extends AppCompatActivity implements
                         .fitCenter()
                         .into(mProductPhoto);
             }
+        }
+    }
+
+    //Order from supplier
+    private void orderMore() {
+        String[] TO = {mEmail};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Order " + mProduct);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Please ship " + mProduct +
+                " in quantities " + mOrderQuantity);
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ex.printStackTrace();
         }
     }
 

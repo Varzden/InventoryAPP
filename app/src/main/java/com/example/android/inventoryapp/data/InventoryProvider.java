@@ -238,7 +238,7 @@ public class InventoryProvider extends ContentProvider {
                 rowsDeleted = database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
-                throw new IllegalArgumentException("Delition is not supported for " + uri);
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
         if (rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);

@@ -81,6 +81,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         ImageView product_add_btn = (ImageView) view.findViewById(R.id.sale_product);
         ImageView product_thumbnail = (ImageView) view.findViewById(R.id.product_thumbnail);
 
+
         // Find the columns of product attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_NAME);
         int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_QUANTITY);

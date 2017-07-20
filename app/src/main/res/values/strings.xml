@@ -39,4 +39,8 @@
     <string name="menu_settings">Settings</string>
     <string name="delete_product">Delete product</string>
     <string name="change_picture">Click on a picture to change it</string>
+    <string name="supplier">Supplier</string>
+    <string name="hint_supplier">Add a supplier</string>
+    <string name="order_more">Order more!</string>
+
 </resources>

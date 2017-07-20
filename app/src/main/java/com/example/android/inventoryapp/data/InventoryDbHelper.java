@@ -15,12 +15,12 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
     public static final String TAG = InventoryDbHelper.class.getSimpleName();
 
 
-     // Name of the database file
+    // Name of the database file
 
     private static final String DATABASE_NAME = "inventory.db";
 
 
-     // Database version. If you change the database schema, you must increment the database version.
+    // Database version. If you change the database schema, you must increment the database version.
 
     private static final int DATABASE_VERSION = 1;
 
@@ -35,7 +35,7 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
     }
 
 
-     // This is called when the database is created for the first time.
+    // This is called when the database is created for the first time.
 
 
     @Override
@@ -47,14 +47,15 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
                 + InventoryEntry.COLUMN_PRICE + " REAL NOT NULL DEFAULT 0.0, "
                 + InventoryEntry.COLUMN_PICTURE + " TEXT NOT NULL DEFAULT 'No images', "
                 + InventoryEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL DEFAULT 'New Product ', "
-                + InventoryEntry.COLUMN_ITEMS_SOLD + " INTEGER NOT NULL DEFAULT 0 "
+                + InventoryEntry.COLUMN_ITEMS_SOLD + " INTEGER NOT NULL DEFAULT 0, "
+                + InventoryEntry.COLUMN_SUPPLIER + " TEXT NOT NULL DEFAULT 'New Supplier' "
                 + ");";
 
         db.execSQL(SQL_CREATE_INVENTORY);
     }
 
 
-     // This is called when the database needs to be upgraded.
+    // This is called when the database needs to be upgraded.
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
